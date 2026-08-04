@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vishal Chauhan | Python & Flask Developer</title>
+<meta name="description" content="Portfolio of Vishal Chauhan — Computer Science student and Python/Flask developer.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="glow glow-a"></div>
+<div class="glow glow-b"></div>
+
+<div id="toast" class="toast"></div>
+
+<header class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="#home" class="brand">&lt;<span>VC</span>/&gt;</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#home" class="nav-link active" data-nav>Home</a>
+      <a href="#about" class="nav-link" data-nav>About</a>
+      <a href="#skills" class="nav-link" data-nav>Skills</a>
+      <a href="#projects" class="nav-link" data-nav>Projects</a>
+      <a href="#education" class="nav-link" data-nav>Education</a>
+      <a href="#contact" class="nav-link" data-nav>Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="{{ url_for('static', filename=profile.resume) }}" class="btn btn-ghost btn-sm" download>
+        <i class="fa-solid fa-download"></i> Resume
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" id="home">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="eyebrow reveal"><span class="pulse-dot"></span> Available for opportunities</p>
+        <h1 class="reveal">Hi, I'm <span class="gradient-text">{{ profile.name }}</span></h1>
+        <h2 class="hero-role reveal">
+          <span id="typed"></span><span class="cursor">|</span>
+        </h2>
+        <p class="hero-desc reveal">{{ profile.summary }}</p>
+        <div class="hero-cta reveal">
+          <a href="#projects" class="btn btn-primary">View My Work <i class="fa-solid fa-arrow-right"></i></a>
+          <a href="#contact" class="btn btn-outline">Contact Me</a>
+        </div>
+        <div class="hero-socials reveal">
+          <a href="{{ profile.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+          <a href="{{ profile.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="mailto:{{ profile.email }}" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div>
+      <div class="hero-visual reveal">
+        <div class="orbit-ring ring-1"></div>
+        <div class="orbit-ring ring-2"></div>
+        <div class="avatar-card">
+          <div class="avatar-glow"></div>
+          <div class="avatar-initials">{{ profile.initials }}</div>
+        </div>
+        <div class="floating-chip chip-1"><i class="fa-brands fa-python"></i> Python</div>
+        <div class="floating-chip chip-2"><i class="fa-solid fa-flask"></i> Flask</div>
+        <div class="floating-chip chip-3"><i class="fa-brands fa-html5"></i> HTML/CSS</div>
+      </div>
+    </div>
+    <a href="#about" class="scroll-cue" aria-label="Scroll down"><i class="fa-solid fa-chevron-down"></i></a>
+  </section>
+
+  <section class="stats">
+    <div class="stats-inner">
+      {% for s in stats %}
+      <div class="stat reveal">
+        <div class="stat-value" data-count="{{ s.value }}" data-suffix="{{ s.suffix }}">0</div>
+        <div class="stat-label">{{ s.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="section-inner about-grid">
+      <div class="reveal">
+        <p class="section-tag">About Me</p>
+        <h2 class="section-title">Turning ideas into <span class="gradient-text">working software</span></h2>
+        <p class="about-text">{{ profile.summary }}</p>
+        <p class="about-text">
+          I'm currently pursuing my {{ education.degree }} at
+          <a href="{{ education.school_url }}" target="_blank" rel="noopener">{{ education.school }}</a>,
+          and I enjoy building complete, practical applications — from database-backed
+          desktop tools to full web apps — end to end.
+        </p>
+        <div class="about-info">
+          <div><i class="fa-solid fa-location-dot"></i> {{ profile.location }}</div>
+          <div><i class="fa-solid fa-envelope"></i> {{ profile.email }}</div>
+          <div><i class="fa-solid fa-phone"></i> {{ profile.phone }}</div>
+        </div>
+      </div>
+      <div class="code-card reveal">
+        <div class="code-card-head">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="code-card-title">developer.py</span>
+        </div>
+        <pre class="code-card-body"><code><span class="tok-kw">class</span> <span class="tok-class">Developer</span>:
+    <span class="tok-var">name</span> = <span class="tok-str">"{{ profile.name }}"</span>
+    <span class="tok-var">role</span> = <span class="tok-str">"CS Undergraduate"</span>
+    <span class="tok-var">stack</span> = {
+        <span class="tok-str">"backend"</span>: [<span class="tok-str">"Python"</span>, <span class="tok-str">"Flask"</span>],
+        <span class="tok-str">"frontend"</span>: [<span class="tok-str">"HTML"</span>, <span class="tok-str">"CSS"</span>, <span class="tok-str">"JS"</span>],
+        <span class="tok-str">"database"</span>: [<span class="tok-str">"MySQL"</span>, <span class="tok-str">"SQLite"</span>],
+    }
+    <span class="tok-var">languages</span> = [<span class="tok-str">"Python"</span>, <span class="tok-str">"Java"</span>, <span class="tok-str">"C++"</span>, <span class="tok-str">"JavaScript"</span>]
+
+    <span class="tok-kw">def</span> <span class="tok-fn">passion</span>(<span class="tok-var">self</span>):
+        <span class="tok-kw">return</span> <span class="tok-str">"building efficient, user-friendly apps"</span></code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="skills">
+    <div class="section-inner">
+      <p class="section-tag reveal">What I Work With</p>
+      <h2 class="section-title reveal">Skills &amp; <span class="gradient-text">Technologies</span></h2>
+      <div class="skills-grid">
+        {% for group, items in skills.items() %}
+        <div class="skill-card reveal">
+          <h3>{{ group }}</h3>
+          <div class="skill-tags">
+            {% for item in items %}
+            <span class="skill-tag">{{ item }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="section-inner">
+      <p class="section-tag reveal">Featured Work</p>
+      <h2 class="section-title reveal">My <span class="gradient-text">Projects</span></h2>
+      <div class="projects-grid">
+        {% for p in projects %}
+        <article class="project-card reveal">
+          <div class="project-top">
+            <div class="project-icon"><i class="{{ p.icon }}"></i></div>
+            <span class="project-category">{{ p.category }}</span>
+          </div>
+          <h3>{{ p.title }}</h3>
+          <p>{{ p.description }}</p>
+          <div class="project-stack">
+            {% for t in p.stack %}<span>{{ t }}</span>{% endfor %}
+          </div>
+          <div class="project-links">
+            <a href="{{ p.github }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
+              <i class="fa-brands fa-github"></i> Source Code
+            </a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      <div class="projects-more reveal">
+        <a href="{{ profile.github }}" target="_blank" rel="noopener" class="btn btn-ghost">
+          See all projects on GitHub <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="education">
+    <div class="section-inner edu-grid">
+      <div class="reveal">
+        <p class="section-tag">Background</p>
+        <h2 class="section-title">Education &amp; <span class="gradient-text">Certifications</span></h2>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div>
+            <h3>{{ education.degree }}</h3>
+            <a href="{{ education.school_url }}" target="_blank" rel="noopener">{{ education.school }}</a>
+            <p class="timeline-meta">{{ education.period }} &middot; {{ education.location }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="cert-grid reveal">
+        {% for c in certificates %}
+        <div class="cert-card">
+          <i class="{{ c.icon }}"></i>
+          <div>
+            <h4>{{ c.title }}</h4>
+            <p>{{ c.issuer }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="section-inner contact-grid">
+      <div class="reveal">
+        <p class="section-tag">Get In Touch</p>
+        <h2 class="section-title">Let's build something <span class="gradient-text">great together</span></h2>
+        <p class="about-text">
+          I'm open to internships, freelance work and collaboration. Whether you have a
+          question or just want to say hi, my inbox is always open.
+        </p>
+        <div class="contact-methods">
+          <a href="mailto:{{ profile.email }}" class="contact-method">
+            <i class="fa-solid fa-envelope"></i>
+            <div><span>Email</span><strong>{{ profile.email }}</strong></div>
+          </a>
+          <a href="tel:{{ profile.phone|replace(' ', '') }}" class="contact-method">
+            <i class="fa-solid fa-phone"></i>
+            <div><span>Phone</span><strong>{{ profile.phone }}</strong></div>
+          </a>
+          <a href="{{ profile.github }}" target="_blank" rel="noopener" class="contact-method">
+            <i class="fa-brands fa-github"></i>
+            <div><span>GitHub</span><strong>{{ profile.github_handle }}</strong></div>
+          </a>
+          <a href="{{ profile.linkedin }}" target="_blank" rel="noopener" class="contact-method">
+            <i class="fa-brands fa-linkedin-in"></i>
+            <div><span>LinkedIn</span><strong>{{ profile.linkedin_handle }}</strong></div>
+          </a>
+        </div>
+      </div>
+
+      <form id="contactForm" class="contact-form reveal" novalidate>
+        <div class="form-row">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" name="name" placeholder="Jane Doe" required>
+        </div>
+        <div class="form-row">
+          <label for="email">Your Email</label>
+          <input type="email" id="email" name="email" placeholder="jane@example.com" required>
+        </div>
+        <div class="form-row">
+          <label for="message">Your Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="Let's talk about..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+          <span class="btn-label">Send Message</span>
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+        <p class="form-status" id="formStatus" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="#home" class="brand">&lt;<span>VC</span>/&gt;</a>
+    <p>&copy; <span id="year">{{ year }}</span> {{ profile.name }}. Built with Python, Flask &amp; a lot of coffee.</p>
+    <div class="footer-socials">
+      <a href="{{ profile.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a href="{{ profile.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="mailto:{{ profile.email }}" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+  </div>
+</footer>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+
+<script>
+  window.__ROLES__ = {{ profile.roles|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
