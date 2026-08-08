@@ -212,8 +212,11 @@ img { max-width: 100%; display: block; }
   font-weight: 600;
   font-size: 1.2rem;
   color: var(--text);
+  display: inline-flex;
+  align-items: center;
 }
 .brand span { color: var(--cyan); }
+.brand-logo { height: 34px; width: auto; border-radius: 6px; display: block; }
 .nav-links {
   display: flex;
   gap: 2rem;

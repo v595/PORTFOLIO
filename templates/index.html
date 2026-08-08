@@ -29,7 +29,9 @@
 
 <header class="navbar" id="navbar">
   <div class="nav-inner">
-    <a href="#home" class="brand">&lt;<span>VC</span>/&gt;</a>
+    <a href="#home" class="brand">
+      <img src="{{ url_for('static', filename='files/vishal-logo.svg') }}" alt="{{ profile.name }}" class="brand-logo">
+    </a>
     <nav class="nav-links" id="navLinks">
       <a href="#home" class="nav-link active" data-nav>Home</a>
       <a href="#about" class="nav-link" data-nav>About</a>
@@ -282,7 +284,9 @@
 
 <footer class="footer">
   <div class="footer-inner">
-    <a href="#home" class="brand">&lt;<span>VC</span>/&gt;</a>
+    <a href="#home" class="brand">
+      <img src="{{ url_for('static', filename='files/vishal-logo.svg') }}" alt="{{ profile.name }}" class="brand-logo">
+    </a>
     <p>&copy; <span id="year">{{ year }}</span> {{ profile.name }}. Built with Python, Flask &amp; a lot of coffee.</p>
     <div class="footer-socials">
       <a href="{{ profile.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>

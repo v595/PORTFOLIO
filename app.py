@@ -36,7 +36,7 @@ PROFILE = {
 }
 
 STATS = [
-    {"value": 3, "suffix": "+", "label": "Projects Built"},
+    {"value": 4, "suffix": "+", "label": "Projects Built"},
     {"value": 3, "suffix": "", "label": "Certifications"},
     {"value": 8, "suffix": "+", "label": "Technologies"},
     {"value": 2026, "suffix": "", "label": "Graduating Year"},
@@ -88,6 +88,20 @@ PROJECTS = [
         "stack": ["Python", "Flask", "HTML", "CSS", "MySQL"],
         "github": "https://github.com/v595/hotel-management-system",
         "demo": "https://hotel-management-system-luc1.onrender.com/",
+    },
+    {
+        "title": "RailBite — Railway Food Delivery",
+        "category": "Full-Stack  ·  Flask  ·  Web",
+        "icon": "fa-solid fa-bowl-food",
+        "description": (
+            "An IRCTC e-catering style food delivery app for train passengers — enter a "
+            "PNR to resolve the train's route and stops, order from 240+ branded dishes, "
+            "track delivery status live, split group orders by PNR with co-passengers, "
+            "and manage everything through a vendor dashboard."
+        ),
+        "stack": ["Python", "Flask", "SQLAlchemy", "SQLite", "JavaScript"],
+        "github": "https://github.com/v595/railway_fd",
+        "demo": "https://railway-fd.onrender.com",
     },
 ]
 
