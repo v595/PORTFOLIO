@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   /* ---------- Theme toggle ---------- */
   const themeToggle = document.getElementById("themeToggle");
   themeToggle.addEventListener("click", () => {
@@ -20,15 +22,19 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
-  backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }));
 
   /* ---------- Mobile nav toggle ---------- */
   const navToggle = document.getElementById("navToggle");
   navToggle.addEventListener("click", () => {
-    navbar.classList.toggle("open");
+    const isOpen = navbar.classList.toggle("open");
+    navToggle.setAttribute("aria-expanded", String(isOpen));
   });
   document.querySelectorAll("[data-nav]").forEach((link) => {
-    link.addEventListener("click", () => navbar.classList.remove("open"));
+    link.addEventListener("click", () => {
+      navbar.classList.remove("open");
+      navToggle.setAttribute("aria-expanded", "false");
+    });
   });
 
   /* ---------- Active nav link on scroll ---------- */
@@ -50,21 +56,26 @@ document.addEventListener("DOMContentLoaded", () => {
   sections.forEach((s) => sectionObserver.observe(s));
 
   /* ---------- Scroll reveal ---------- */
-  const revealObserver = new IntersectionObserver(
-    (entries, obs) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          obs.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.15 }
-  );
-  document.querySelectorAll(".reveal").forEach((el, i) => {
-    el.style.transitionDelay = `${Math.min(i % 6, 5) * 0.08}s`;
-    revealObserver.observe(el);
-  });
+  const revealEls = document.querySelectorAll(".reveal");
+  if (reduceMotion) {
+    revealEls.forEach((el) => el.classList.add("visible"));
+  } else {
+    const revealObserver = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    revealEls.forEach((el, i) => {
+      el.style.transitionDelay = `${Math.min(i % 6, 5) * 0.06}s`;
+      revealObserver.observe(el);
+    });
+  }
 
   /* ---------- Typing effect for hero role ---------- */
   const typedEl = document.getElementById("typed");
@@ -72,67 +83,124 @@ document.addEventListener("DOMContentLoaded", () => {
     ? window.__ROLES__
     : ["Python Developer", "Flask Developer"];
 
-  let roleIndex = 0, charIndex = 0, deleting = false;
+  if (reduceMotion) {
+    typedEl.textContent = roles[0];
+  } else {
+    let roleIndex = 0, charIndex = 0, deleting = false;
 
-  function typeLoop() {
-    const current = roles[roleIndex];
-    if (!deleting) {
-      charIndex++;
-      typedEl.textContent = current.slice(0, charIndex);
-      if (charIndex === current.length) {
-        deleting = true;
-        setTimeout(typeLoop, 1400);
-        return;
+    function typeLoop() {
+      const current = roles[roleIndex];
+      if (!deleting) {
+        charIndex++;
+        typedEl.textContent = current.slice(0, charIndex);
+        if (charIndex === current.length) {
+          deleting = true;
+          setTimeout(typeLoop, 1400);
+          return;
+        }
+      } else {
+        charIndex--;
+        typedEl.textContent = current.slice(0, charIndex);
+        if (charIndex === 0) {
+          deleting = false;
+          roleIndex = (roleIndex + 1) % roles.length;
+        }
       }
-    } else {
-      charIndex--;
-      typedEl.textContent = current.slice(0, charIndex);
-      if (charIndex === 0) {
-        deleting = false;
-        roleIndex = (roleIndex + 1) % roles.length;
-      }
+      setTimeout(typeLoop, deleting ? 40 : 80);
     }
-    setTimeout(typeLoop, deleting ? 40 : 80);
+    typeLoop();
   }
-  typeLoop();
 
   /* ---------- Animated stat counters ---------- */
   const statEls = document.querySelectorAll(".stat-value");
-  const statObserver = new IntersectionObserver(
-    (entries, obs) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        const target = parseInt(el.dataset.count, 10) || 0;
-        const suffix = el.dataset.suffix || "";
-        const duration = 1200;
-        const start = performance.now();
-        const step = (now) => {
-          const progress = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          el.textContent = Math.round(eased * target) + suffix;
-          if (progress < 1) requestAnimationFrame(step);
-        };
-        requestAnimationFrame(step);
-        obs.unobserve(el);
-      });
-    },
-    { threshold: 0.6 }
-  );
-  statEls.forEach((el) => statObserver.observe(el));
+  if (reduceMotion) {
+    statEls.forEach((el) => {
+      el.textContent = (parseInt(el.dataset.count, 10) || 0) + (el.dataset.suffix || "");
+    });
+  } else {
+    const statObserver = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const target = parseInt(el.dataset.count, 10) || 0;
+          const suffix = el.dataset.suffix || "";
+          const duration = 900;
+          const start = performance.now();
+          const step = (now) => {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.round(eased * target) + suffix;
+            if (progress < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+          obs.unobserve(el);
+        });
+      },
+      { threshold: 0.6 }
+    );
+    statEls.forEach((el) => statObserver.observe(el));
+  }
 
-  /* ---------- Contact form (Web3Forms) ---------- */
+  /* ---------- Contact form (validation + Web3Forms) ---------- */
   const form = document.getElementById("contactForm");
   const statusEl = document.getElementById("formStatus");
   const submitBtn = document.getElementById("submitBtn");
 
+  const fields = {
+    name: { el: document.getElementById("name"), error: document.getElementById("nameError"), validate: (v) => v.trim().length > 0 },
+    email: { el: document.getElementById("email"), error: document.getElementById("emailError"), validate: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) },
+    message: { el: document.getElementById("message"), error: document.getElementById("messageError"), validate: (v) => v.trim().length > 0 },
+  };
+
+  function setFieldValid(field) {
+    field.el.setAttribute("aria-invalid", "false");
+    field.error.classList.remove("show");
+  }
+  function setFieldInvalid(field) {
+    field.el.setAttribute("aria-invalid", "true");
+    field.error.classList.add("show");
+  }
+
+  Object.values(fields).forEach((field) => {
+    field.el.addEventListener("input", () => {
+      if (field.validate(field.el.value)) setFieldValid(field);
+    });
+    field.el.addEventListener("blur", () => {
+      if (!field.validate(field.el.value)) setFieldInvalid(field);
+    });
+  });
+
+  function validateForm() {
+    let valid = true;
+    let firstInvalid = null;
+    Object.values(fields).forEach((field) => {
+      if (field.validate(field.el.value)) {
+        setFieldValid(field);
+      } else {
+        setFieldInvalid(field);
+        valid = false;
+        if (!firstInvalid) firstInvalid = field.el;
+      }
+    });
+    if (firstInvalid) firstInvalid.focus();
+    return valid;
+  }
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    submitBtn.disabled = true;
-    submitBtn.querySelector(".btn-label").textContent = "Sending...";
     statusEl.textContent = "";
     statusEl.className = "form-status";
+
+    if (!validateForm()) {
+      statusEl.textContent = "Please fix the highlighted fields.";
+      statusEl.className = "form-status err";
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.querySelector(".btn-label").textContent = "Sending...";
 
     const formData = new FormData(form);
 
@@ -146,10 +214,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (res.ok && data.success) {
         const message = "Thanks for reaching out! I'll get back to you soon.";
-        statusEl.textContent = message;
+        statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + message;
         statusEl.className = "form-status ok";
         showToast(message);
         form.reset();
+        Object.values(fields).forEach(setFieldValid);
       } else {
         statusEl.textContent = data.message || "Something went wrong. Please try again.";
         statusEl.className = "form-status err";
@@ -169,58 +238,4 @@ document.addEventListener("DOMContentLoaded", () => {
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 3500);
   }
-
-  /* ---------- Particle network background ---------- */
-  const canvas = document.getElementById("bg-canvas");
-  const ctx = canvas.getContext("2d");
-  let particles = [];
-  let width, height;
-
-  function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-    const count = Math.min(90, Math.floor((width * height) / 18000));
-    particles = Array.from({ length: count }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: (Math.random() - 0.5) * 0.35,
-      r: Math.random() * 1.6 + 0.6,
-    }));
-  }
-
-  function tick() {
-    ctx.clearRect(0, 0, width, height);
-    for (const p of particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0 || p.x > width) p.vx *= -1;
-      if (p.y < 0 || p.y > height) p.vy *= -1;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(96, 165, 250, 0.55)";
-      ctx.fill();
-    }
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const a = particles[i], b = particles[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 130) {
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(34, 211, 238, ${0.12 * (1 - dist / 130)})`;
-          ctx.stroke();
-        }
-      }
-    }
-    requestAnimationFrame(tick);
-  }
-
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  window.addEventListener("resize", resize);
-  resize();
-  if (!reduceMotion) requestAnimationFrame(tick);
 });

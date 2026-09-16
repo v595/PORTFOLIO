@@ -3,11 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vishal Chauhan | Python & Flask Developer</title>
-<meta name="description" content="Portfolio of Vishal Chauhan — Computer Science student and Python/Flask developer.">
-<link rel="icon" href="data:,">
+<title>{{ profile.name }} | {{ profile.headline }}</title>
+<meta name="description" content="{{ profile.headline }} with professional experience in Flask, PostgreSQL, AI automation, UI/UX, backend development and modern web applications.">
+<meta name="author" content="{{ profile.name }}">
+<link rel="canonical" href="https://vishalchauhann.netlify.app/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ profile.name }} | {{ profile.headline }}">
+<meta property="og:description" content="{{ profile.hero_desc }}">
+<meta property="og:url" content="https://vishalchauhann.netlify.app/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ profile.name }} | {{ profile.headline }}">
+<meta name="twitter:description" content="{{ profile.hero_desc }}">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='files/vc-logo.png') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -21,57 +31,69 @@
   })();
 </script>
 
-<canvas id="bg-canvas"></canvas>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<div class="bg-wash"></div>
+<div class="bg-grid"></div>
 <div class="glow glow-a"></div>
 <div class="glow glow-b"></div>
 
-<div id="toast" class="toast"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <header class="navbar" id="navbar">
   <div class="nav-inner">
     <a href="#home" class="brand">
-      <img src="{{ url_for('static', filename='files/vishal-logo.svg') }}" alt="{{ profile.name }}" class="brand-logo">
+      <img src="{{ url_for('static', filename='files/vc-logo.png') }}" alt="{{ profile.name }}" class="brand-logo">
     </a>
-    <nav class="nav-links" id="navLinks">
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
       <a href="#home" class="nav-link active" data-nav>Home</a>
       <a href="#about" class="nav-link" data-nav>About</a>
+      <a href="#experience" class="nav-link" data-nav>Experience</a>
       <a href="#skills" class="nav-link" data-nav>Skills</a>
       <a href="#projects" class="nav-link" data-nav>Projects</a>
       <a href="#education" class="nav-link" data-nav>Education</a>
       <a href="#contact" class="nav-link" data-nav>Contact</a>
     </nav>
     <div class="nav-actions">
-      <a href="{{ url_for('static', filename=profile.resume) }}" class="btn btn-ghost btn-sm" download>
-        <i class="fa-solid fa-download"></i> Resume
+      <a href="{{ url_for('static', filename=profile.resume) }}" class="btn btn-primary btn-sm" download>
+        <i class="fa-solid fa-download"></i> <span>Resume</span>
       </a>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
         <i class="fa-solid fa-sun"></i>
         <i class="fa-solid fa-moon"></i>
       </button>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
         <span></span><span></span><span></span>
       </button>
     </div>
   </div>
 </header>
 
-<main>
+<main id="main">
 
   <section class="hero" id="home">
     <div class="hero-inner">
       <div class="hero-text">
         <p class="eyebrow reveal"><span class="pulse-dot"></span> Available for opportunities</p>
-        <h1 class="reveal">Hi, I'm <span class="gradient-text">{{ profile.name }}</span></h1>
-        <h2 class="hero-role reveal">
+        <h1 class="hero-name reveal">{{ profile.name }}</h1>
+        <h2 class="hero-title reveal">Python &amp; React<br><span class="gradient-text">Full-Stack Developer</span></h2>
+        <p class="hero-role reveal">
           <span id="typed"></span><span class="cursor">|</span>
-        </h2>
-        <p class="hero-desc reveal">{{ profile.summary }}</p>
+        </p>
+        <p class="hero-desc reveal">{{ profile.hero_desc }}</p>
+        <div class="hero-highlights reveal">
+          <span class="highlight-chip highlight-chip-accent"><i class="fa-solid fa-briefcase"></i> {{ experience.duration_value }} {{ experience.duration_label }} Professional Experience</span>
+          <span class="highlight-chip">Python</span>
+          <span class="highlight-chip">Flask</span>
+          <span class="highlight-chip">React</span>
+          <span class="highlight-chip">PostgreSQL</span>
+          <span class="highlight-chip">AI Automation</span>
+        </div>
         <div class="hero-cta reveal">
           <a href="#projects" class="btn btn-primary">View My Work <i class="fa-solid fa-arrow-right"></i></a>
           <a href="{{ url_for('static', filename=profile.resume) }}" class="btn btn-accent" download>
             <i class="fa-solid fa-download"></i> Download Resume
           </a>
-          <a href="#contact" class="btn btn-outline">Contact Me</a>
         </div>
         <div class="hero-socials reveal">
           <a href="{{ profile.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
@@ -80,15 +102,23 @@
         </div>
       </div>
       <div class="hero-visual reveal">
-        <div class="orbit-ring ring-1"></div>
-        <div class="orbit-ring ring-2"></div>
-        <div class="avatar-card">
-          <div class="avatar-glow"></div>
-          <div class="avatar-initials">{{ profile.initials }}</div>
+        <div class="term-panel">
+          <div class="term-head">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            <span class="term-title">vishal@dev ~ zsh</span>
+          </div>
+          <div class="term-body">
+            <div><span class="term-prompt">$</span> <span class="term-cmd">whoami</span></div>
+            <span class="term-out">vishal-chauhan</span>
+            <div><span class="term-prompt">$</span> <span class="term-cmd">cat role.txt</span></div>
+            <span class="term-out">Python &amp; React Full-Stack Developer</span>
+            <div><span class="term-prompt">$</span> <span class="term-cmd">ls ./stack</span></div>
+            <span class="term-out"><span class="term-tag">react</span>  <span class="term-tag">python</span>  <span class="term-tag">flask</span>  <span class="term-tag">postgresql</span>  <span class="term-tag">ai-automation</span></span>
+            <div><span class="term-prompt">$</span> <span class="term-cmd">status --check</span></div>
+            <span class="term-out"><span class="term-ok">&#10003;</span> Available for opportunities</span>
+            <div><span class="term-prompt">$</span> <span class="cursor">|</span></div>
+          </div>
         </div>
-        <div class="floating-chip chip-1"><i class="fa-brands fa-python"></i> Python</div>
-        <div class="floating-chip chip-2"><i class="fa-solid fa-flask"></i> Flask</div>
-        <div class="floating-chip chip-3"><i class="fa-brands fa-html5"></i> HTML/CSS</div>
       </div>
     </div>
     <a href="#about" class="scroll-cue" aria-label="Scroll down"><i class="fa-solid fa-chevron-down"></i></a>
@@ -110,12 +140,12 @@
       <div class="reveal">
         <p class="section-tag">About Me</p>
         <h2 class="section-title">Turning ideas into <span class="gradient-text">working software</span></h2>
-        <p class="about-text">{{ profile.summary }}</p>
+        <p class="about-text">{{ profile.about_text }}</p>
         <p class="about-text">
-          I'm currently pursuing my {{ education.degree }} at
+          I hold a {{ education.degree }} from
           <a href="{{ education.school_url }}" target="_blank" rel="noopener">{{ education.school }}</a>,
           and I enjoy building complete, practical applications — from database-backed
-          desktop tools to full web apps — end to end.
+          tools to full-stack web platforms — end to end.
         </p>
         <div class="about-info">
           <div><i class="fa-solid fa-location-dot"></i> {{ profile.location }}</div>
@@ -130,31 +160,118 @@
         </div>
         <pre class="code-card-body"><code><span class="tok-kw">class</span> <span class="tok-class">Developer</span>:
     <span class="tok-var">name</span> = <span class="tok-str">"{{ profile.name }}"</span>
-    <span class="tok-var">role</span> = <span class="tok-str">"CS Undergraduate"</span>
-    <span class="tok-var">stack</span> = {
-        <span class="tok-str">"backend"</span>: [<span class="tok-str">"Python"</span>, <span class="tok-str">"Flask"</span>],
-        <span class="tok-str">"frontend"</span>: [<span class="tok-str">"HTML"</span>, <span class="tok-str">"CSS"</span>, <span class="tok-str">"JS"</span>],
-        <span class="tok-str">"database"</span>: [<span class="tok-str">"MySQL"</span>, <span class="tok-str">"SQLite"</span>],
-    }
-    <span class="tok-var">languages</span> = [<span class="tok-str">"Python"</span>, <span class="tok-str">"Java"</span>, <span class="tok-str">"C++"</span>, <span class="tok-str">"JavaScript"</span>]
+    <span class="tok-var">role</span> = <span class="tok-str">"Full-Stack Developer"</span>
 
-    <span class="tok-kw">def</span> <span class="tok-fn">passion</span>(<span class="tok-var">self</span>):
-        <span class="tok-kw">return</span> <span class="tok-str">"building efficient, user-friendly apps"</span></code></pre>
+    <span class="tok-var">stack</span> = [
+        <span class="tok-str">"Python"</span>, <span class="tok-str">"Flask"</span>,
+        <span class="tok-str">"React"</span>, <span class="tok-str">"PostgreSQL"</span>,
+    ]
+
+    <span class="tok-var">focus</span> = [
+        <span class="tok-str">"Web Development"</span>,
+        <span class="tok-str">"AI Automation"</span>,
+        <span class="tok-str">"Backend Systems"</span>,
+    ]</code></pre>
       </div>
     </div>
   </section>
 
-  <section class="section section-alt" id="skills">
+  <section class="section section-alt" id="experience">
+    <div class="section-inner">
+      <p class="section-tag reveal">Career</p>
+      <h2 class="section-title reveal">Professional <span class="gradient-text">Experience</span></h2>
+
+      <div class="exp-card reveal">
+        <div class="exp-head">
+          <div class="exp-head-main">
+            <h3>{{ experience.role }}</h3>
+            <span class="exp-company">{{ experience.company }}</span>
+            <p class="exp-meta">
+              <span><i class="fa-solid fa-location-dot"></i> {{ experience.location }}</span>
+              <span><i class="fa-regular fa-calendar"></i> {{ experience.period }}</span>
+            </p>
+          </div>
+          <div class="exp-duration">
+            <span class="exp-duration-value">{{ experience.duration_value }}</span>
+            <span class="exp-duration-label">{{ experience.duration_label }}</span>
+          </div>
+        </div>
+        <ul class="exp-list">
+          {% for point in experience.points %}
+          <li><i class="fa-solid fa-circle"></i> {{ point }}</li>
+          {% endfor %}
+        </ul>
+        <div class="exp-badges">
+          {% for b in experience.badges %}<span class="badge">{{ b }}</span>{% endfor %}
+        </div>
+      </div>
+
+      <div class="pro-projects-head reveal">
+        <p class="section-tag">Professional Work</p>
+        <h3>Professional Projects &amp; Client Platforms</h3>
+        <p class="section-sub">Real-world platforms and applications I contributed to during my professional experience — UI/UX, frontend, backend and/or server-side work.</p>
+      </div>
+
+      <div class="pro-projects-grid">
+        {% for p in professional_projects %}
+        <article class="pro-card{{ ' pro-card-featured' if p.featured else '' }} reveal">
+          {% if p.featured %}<span class="featured-tag"><i class="fa-solid fa-star"></i> Most Comprehensive Contribution</span>{% endif %}
+          <div class="pro-card-head">
+            <div class="pro-card-icon"><i class="{{ p.icon }}"></i></div>
+            <div>
+              <span class="pro-card-role">{{ 'Professional Work — Frontend, Backend & Server' if p.featured else 'Professional Work' }}</span>
+              <h4>{{ p.name }}</h4>
+            </div>
+          </div>
+          <p class="pro-desc">{{ p.desc }}</p>
+          {% if p.featured %}
+          <div class="stack-breakdown">
+            {% for col in p.stack_breakdown %}
+            <div class="stack-col">
+              <h5><i class="{{ col.icon }}"></i> {{ col.label }}</h5>
+              <ul>
+                {% for item in col.points %}<li>{{ item }}</li>{% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <ul class="pro-contrib">
+            {% for c in p.contrib %}<li><i class="fa-solid fa-check"></i> {{ c }}</li>{% endfor %}
+          </ul>
+          {% endif %}
+          <div class="pro-badges">
+            {% for b in p.badges %}<span class="badge">{{ b }}</span>{% endfor %}
+          </div>
+          <div class="pro-card-links">
+            <a href="{{ p.link }}" target="_blank" rel="noopener" class="btn {{ 'btn-accent' if p.featured else 'btn-outline' }} btn-sm">
+              {{ p.cta }} <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="skills">
     <div class="section-inner">
       <p class="section-tag reveal">What I Work With</p>
       <h2 class="section-title reveal">Skills &amp; <span class="gradient-text">Technologies</span></h2>
+      {% set tech_map = {'React': 'react', 'Python': 'python', 'JavaScript': 'javascript', 'PostgreSQL': 'postgresql', 'Flask': 'flask', 'Git': 'git', 'GitHub': 'github'} %}
       <div class="skills-grid">
         {% for group, items in skills.items() %}
         <div class="skill-card reveal">
           <h3>{{ group }}</h3>
           <div class="skill-tags">
             {% for item in items %}
+            {% if group == 'AI & Automation' %}
+            <span class="skill-tag" data-tech="ai">{{ item }}</span>
+            {% elif tech_map.get(item) %}
+            <span class="skill-tag" data-tech="{{ tech_map.get(item) }}">{{ item }}</span>
+            {% else %}
             <span class="skill-tag">{{ item }}</span>
+            {% endif %}
             {% endfor %}
           </div>
         </div>
@@ -163,31 +280,74 @@
     </div>
   </section>
 
-  <section class="section" id="projects">
+  <section class="section section-alt" id="projects">
     <div class="section-inner">
       <p class="section-tag reveal">Featured Work</p>
-      <h2 class="section-title reveal">My <span class="gradient-text">Projects</span></h2>
-      <div class="projects-grid">
-        {% for p in projects %}
-        <article class="project-card reveal">
-          <div class="project-top">
-            <div class="project-icon"><i class="{{ p.icon }}"></i></div>
-            <span class="project-category">{{ p.category }}</span>
+      <h2 class="section-title reveal">Personal <span class="gradient-text">Projects</span></h2>
+
+      {% for p in projects if p.featured %}
+      <div class="featured-project reveal">
+        <div class="featured-project-media">
+          <div class="browser-bar">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
           </div>
+          <img src="{{ url_for('static', filename=p.image) }}" alt="{{ p.image_alt }}" loading="lazy" width="960" height="600">
+        </div>
+        <div class="featured-project-body">
+          <span class="project-category">{{ p.category }}</span>
           <h3>{{ p.title }}</h3>
-          <p>{{ p.description }}</p>
+          <p class="project-summary">{{ p.summary }}</p>
+          <div class="project-problem"><i class="fa-solid fa-bullseye"></i> {{ p.problem }}</div>
+          <ul class="project-features">
+            {% for f in p.features %}<li>{{ f }}</li>{% endfor %}
+          </ul>
           <div class="project-stack">
             {% for t in p.stack %}<span>{{ t }}</span>{% endfor %}
           </div>
           <div class="project-links">
-            {% if p.demo %}
-            <a href="{{ p.demo }}" target="_blank" rel="noopener" class="btn btn-accent btn-sm">
+            <a href="{{ p.demo }}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
               <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
             </a>
-            {% endif %}
             <a href="{{ p.github }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
-              <i class="fa-brands fa-github"></i> Source Code
+              <i class="fa-brands fa-github"></i> GitHub
             </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+      <div class="projects-grid">
+        {% for p in projects if not p.featured %}
+        <article class="project-card reveal">
+          <div class="project-media">
+            <div class="browser-bar">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            </div>
+            <img src="{{ url_for('static', filename=p.image) }}" alt="{{ p.image_alt }}" loading="lazy" width="960" height="600">
+          </div>
+          <div class="project-body">
+            <div class="project-top">
+              <span class="project-category">{{ p.category }}</span>
+            </div>
+            <h3>{{ p.title }}</h3>
+            <p class="project-summary">{{ p.summary }}</p>
+            <div class="project-problem"><i class="fa-solid fa-bullseye"></i> {{ p.problem }}</div>
+            <ul class="project-features">
+              {% for f in p.features %}<li>{{ f }}</li>{% endfor %}
+            </ul>
+            <div class="project-stack">
+              {% for t in p.stack %}<span>{{ t }}</span>{% endfor %}
+            </div>
+            <div class="project-links">
+              {% if p.demo %}
+              <a href="{{ p.demo }}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+              </a>
+              {% endif %}
+              <a href="{{ p.github }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
+                <i class="fa-brands fa-github"></i> GitHub
+              </a>
+            </div>
           </div>
         </article>
         {% endfor %}
@@ -200,20 +360,19 @@
     </div>
   </section>
 
-  <section class="section section-alt" id="education">
-    <div class="section-inner edu-grid">
-      <div class="reveal">
-        <p class="section-tag">Background</p>
-        <h2 class="section-title">Education &amp; <span class="gradient-text">Certifications</span></h2>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div>
-            <h3>{{ education.degree }}</h3>
-            <a href="{{ education.school_url }}" target="_blank" rel="noopener">{{ education.school }}</a>
-            <p class="timeline-meta">{{ education.period }} &middot; {{ education.location }}</p>
-          </div>
+  <section class="section" id="education">
+    <div class="section-inner">
+      <p class="section-tag reveal">Background</p>
+      <h2 class="section-title reveal">Education &amp; <span class="gradient-text">Certifications</span></h2>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div>
+          <h3>{{ education.degree }}</h3>
+          <a href="{{ education.school_url }}" target="_blank" rel="noopener">{{ education.school }}</a>
+          <p class="timeline-meta">{{ education.period }} &middot; {{ education.location }}</p>
         </div>
       </div>
+      <p class="cert-label reveal">Certifications</p>
       <div class="cert-grid reveal">
         {% for c in certificates %}
         <div class="cert-card">
@@ -228,31 +387,35 @@
     </div>
   </section>
 
-  <section class="section" id="contact">
+  <section class="section section-alt" id="contact">
     <div class="section-inner contact-grid">
       <div class="reveal">
         <p class="section-tag">Get In Touch</p>
-        <h2 class="section-title">Let's build something <span class="gradient-text">great together</span></h2>
+        <h2 class="section-title">Let's Build Something <span class="gradient-text">Together</span></h2>
         <p class="about-text">
-          I'm open to internships, freelance work and collaboration. Whether you have a
-          question or just want to say hi, my inbox is always open.
+          I'm open to opportunities in Python development, backend development, full-stack
+          development, React development and AI automation.
         </p>
         <div class="contact-methods">
           <a href="mailto:{{ profile.email }}" class="contact-method">
             <i class="fa-solid fa-envelope"></i>
             <div><span>Email</span><strong>{{ profile.email }}</strong></div>
           </a>
-          <a href="tel:{{ profile.phone|replace(' ', '') }}" class="contact-method">
-            <i class="fa-solid fa-phone"></i>
-            <div><span>Phone</span><strong>{{ profile.phone }}</strong></div>
+          <a href="{{ profile.linkedin }}" target="_blank" rel="noopener" class="contact-method">
+            <i class="fa-brands fa-linkedin-in"></i>
+            <div><span>LinkedIn</span><strong>{{ profile.linkedin_handle }}</strong></div>
           </a>
           <a href="{{ profile.github }}" target="_blank" rel="noopener" class="contact-method">
             <i class="fa-brands fa-github"></i>
             <div><span>GitHub</span><strong>{{ profile.github_handle }}</strong></div>
           </a>
-          <a href="{{ profile.linkedin }}" target="_blank" rel="noopener" class="contact-method">
-            <i class="fa-brands fa-linkedin-in"></i>
-            <div><span>LinkedIn</span><strong>{{ profile.linkedin_handle }}</strong></div>
+          <a href="{{ url_for('static', filename=profile.resume) }}" download class="contact-method">
+            <i class="fa-solid fa-file-arrow-down"></i>
+            <div><span>Resume</span><strong>Download My Resume</strong></div>
+          </a>
+          <a href="tel:{{ profile.phone|replace(' ', '') }}" class="contact-method">
+            <i class="fa-solid fa-phone"></i>
+            <div><span>Phone</span><strong>{{ profile.phone }}</strong></div>
           </a>
         </div>
       </div>
@@ -260,16 +423,19 @@
       <form id="contactForm" class="contact-form reveal" novalidate>
         <input type="hidden" name="access_key" value="03574ba2-c3cb-45f0-bed5-edce30b1b074">
         <div class="form-row">
-          <label for="name">Your Name</label>
-          <input type="text" id="name" name="name" placeholder="Jane Doe" required>
+          <label for="name">Your Name <span class="req">*</span></label>
+          <input type="text" id="name" name="name" autocomplete="name" placeholder="Jane Doe" required aria-describedby="nameError">
+          <span class="field-error" id="nameError" role="alert"><i class="fa-solid fa-circle-exclamation"></i> Please enter your name.</span>
         </div>
         <div class="form-row">
-          <label for="email">Your Email</label>
-          <input type="email" id="email" name="email" placeholder="jane@example.com" required>
+          <label for="email">Your Email <span class="req">*</span></label>
+          <input type="email" id="email" name="email" autocomplete="email" placeholder="jane@example.com" required aria-describedby="emailError">
+          <span class="field-error" id="emailError" role="alert"><i class="fa-solid fa-circle-exclamation"></i> Please enter a valid email address.</span>
         </div>
         <div class="form-row">
-          <label for="message">Your Message</label>
-          <textarea id="message" name="message" rows="5" placeholder="Let's talk about..." required></textarea>
+          <label for="message">Your Message <span class="req">*</span></label>
+          <textarea id="message" name="message" rows="5" placeholder="Let's talk about..." required aria-describedby="messageError"></textarea>
+          <span class="field-error" id="messageError" role="alert"><i class="fa-solid fa-circle-exclamation"></i> Please enter a message.</span>
         </div>
         <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
           <span class="btn-label">Send Message</span>
@@ -284,10 +450,13 @@
 
 <footer class="footer">
   <div class="footer-inner">
-    <a href="#home" class="brand">
-      <img src="{{ url_for('static', filename='files/vishal-logo.svg') }}" alt="{{ profile.name }}" class="brand-logo">
-    </a>
-    <p>&copy; <span id="year">{{ year }}</span> {{ profile.name }}. Built with Python, Flask &amp; a lot of coffee.</p>
+    <div class="footer-brand">
+      <a href="#home" class="brand">
+        <img src="{{ url_for('static', filename='files/vc-logo.png') }}" alt="{{ profile.name }}" class="brand-logo">
+      </a>
+      <span class="footer-role">{{ profile.headline }}</span>
+    </div>
+    <p>&copy; <span id="year">{{ year }}</span> {{ profile.name }}.</p>
     <div class="footer-socials">
       <a href="{{ profile.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
       <a href="{{ profile.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
